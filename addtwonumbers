@@ -1,0 +1,156 @@
+package main
+
+import "fmt"
+
+type ListNode struct {
+	Val int
+	Next *ListNode
+}
+
+func main() {
+	var l1, l2 *ListNode
+
+	l1 = addNode(l1, 1)
+	l1 = addNode(l1, 8)
+	//l1 = addNode(l1, 3)
+	l2 = addNode(l2, 0)
+	//l2 = addNode(l2, 6)
+	//l2 = addNode(l2, 7)
+
+	//l := addTwoNumbers1(l1, l2)
+	l := addTwoNumbers2(l1, l2)
+
+	fmt.Println(l)
+}
+
+//递归
+func addTwoNumbers2(l1 *ListNode, l2 *ListNode) *ListNode {
+	var l, pre *ListNode
+	l = &ListNode{1, nil}
+	pre = l
+	t := 0
+	for ;l1 != nil || l2 != nil || t != 0; {
+		if l1 != nil {
+			t += l1.Val
+			l1 = l1.Next
+		}
+
+		if l2 != nil {
+			t += l2.Val
+			l2 = l2.Next
+		}
+
+
+		pre.Next = &ListNode{t % 10, nil}
+		pre = pre.Next
+		t = t / 10
+	}
+
+	return l.Next
+}
+
+//非递归
+func addTwoNumbers1(l1 *ListNode, l2 *ListNode) *ListNode {
+	res := make([]int, 0)
+
+	arr1 := make([]int, 0)
+	arr2 := make([]int, 0)
+
+	index1 := 0
+	index2 := 0
+
+	for tmp := l1; tmp != nil; tmp = tmp.Next {
+		arr1 = append(arr1, tmp.Val)
+		index1++
+	}
+
+	for tmp := l2; tmp != nil; tmp = tmp.Next {
+		arr2 = append(arr2, tmp.Val)
+		index2++
+	}
+
+	length := index1
+	if index2 < length {
+		length = index2
+	}
+
+	nextNum := 0
+	for i := 0; i < length; i++ {
+		tmpNum := arr1[i] + arr2[i]
+		if i > 0 {
+			tmpNum += nextNum
+		}
+
+		diffNum := tmpNum - 10
+		if diffNum >= 0 {
+			nextNum = 1
+			tmpNum = diffNum
+		} else {
+			nextNum = 0
+		}
+
+		res = append(res, tmpNum)
+	}
+
+	fmt.Println(res)
+	fmt.Println(nextNum)
+
+	if length < index1 {
+		res = appendOtherNums(arr1[length:], res, nextNum)
+	} else if length < index2 {
+		res = appendOtherNums(arr2[length:], res, nextNum)
+	} else {
+		if nextNum > 0 {
+			res = append(res, nextNum)
+		}
+	}
+
+	var newList *ListNode
+	for i := 0; i < len(res); i++ {
+		newList = addNode(newList, res[i])
+	}
+
+	return newList
+
+}
+
+func addNode(l *ListNode, v int) *ListNode {
+	if l == nil {
+		l = &ListNode{v, nil}
+		return l
+	}
+
+	tmp := l
+	for ; tmp != nil; tmp = tmp.Next {
+		if tmp.Next == nil {
+			break
+		}
+	}
+
+	tmp.Next = &ListNode{v, nil}
+
+	return l
+}
+
+func appendOtherNums(arr []int, res []int, nextNum int) []int {
+	fmt.Println(arr)
+	for i := 0; i < len(arr); i++ {
+		tmpNum := arr[i] + nextNum
+		diffNum := tmpNum - 10
+		if diffNum >= 0 {
+			nextNum = 1
+			tmpNum = diffNum
+		} else {
+			nextNum = 0
+		}
+
+		res = append(res, tmpNum)
+	}
+
+	if nextNum > 0 {
+		res = append(res, nextNum)
+	}
+
+	return res
+
+}
