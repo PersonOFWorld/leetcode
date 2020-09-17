@@ -19,4 +19,75 @@
 //
 //则中位数是 (2 + 3)/2 = 2.5
 
+package main
 
+import (
+	"fmt"
+)
+
+func main() {
+	nums1 := []int{1, 2}
+	nums2 := []int{3, 4}
+	fmt.Println(findMedianSortedArrays(nums1, nums2))
+}
+
+func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
+	lengthCnt := len(nums1) + len(nums2)
+
+	targetEnd := 0
+	isEven := false
+	targetIndex1 := 0
+	targetIndex2 := 0
+	if lengthCnt % 2 == 0 {
+		isEven = true
+		targetIndex1 = (lengthCnt - 1 ) / 2
+		targetIndex2 = targetIndex1 + 1
+		targetEnd = targetIndex2
+	} else {
+		targetIndex1 = lengthCnt / 2
+		targetEnd = targetIndex1
+	}
+
+	newArr := make([]int, 0)
+	index1 := 0
+	num1 := 0
+	index2 := 0
+	num2 := 0
+	for i := 0; i <= targetEnd; i++ {
+		if index1 <= len(nums1) - 1 {
+			num1 = nums1[index1]
+		} else if index2 <= len(nums2) -1{
+			newArr = append(newArr, nums2[index2])
+			index2++
+			continue
+		}
+
+		if index2 <= len(nums2) -1 {
+			num2 = nums2[index2]
+		} else if index1 <= len(nums1) - 1 {
+			newArr = append(newArr, nums1[index1])
+                        index1++
+			continue
+		}
+
+		if num1 <= num2 {
+			index1++
+			newArr = append(newArr, num1)
+			num1 = 0
+		} else {
+			index2++
+			newArr = append(newArr, num2)
+			num2 = 0
+		}
+
+	}
+
+
+	if isEven {
+		return float64((newArr[targetIndex2] + newArr[targetIndex1])) / 2
+	} else {
+		return float64(newArr[targetIndex1])
+	}
+
+	return 0
+}
