@@ -1,25 +1,43 @@
 func longestPalindrome(s string) string {
-    var index int = 0
+	//起始下标
+	var index int = 0
+	//字符串长度
 	var size int = len(s)
+	//回文字符串最大长度
 	var maxLen = 0
+	//回文字符串
 	var res = ""
-	for index < size{
+	//遍历字符串
+	for index < size {
+		//左右临界下标默认为遍历索引值
 		var pointerL = index
 		var pointerR = index
-		for pointerL >= 0 && s[pointerL] == s[index]{
+		
+		//左边临界值向左退，至少一个单位
+		for pointerL >= 0 && s[pointerL] == s[index] {
 			pointerL--
 		}
-		for pointerR < size && s[pointerR] == s[index]{
+		
+		//右边临界值向右退，至少一个单位
+		for pointerR < size && s[pointerR] == s[index] {
 			pointerR++
 		}
+		
+		//下次循环的起始坐标
 		var nextPoint = pointerR
-		for pointerL >= 0 && pointerR < size && s[pointerR] == s[pointerL]{
+		
+		//左右下标向两边扩大
+		for pointerL >= 0 && pointerR < size && s[pointerR] == s[pointerL] {
 			pointerL--
 			pointerR++
 		}
+		
+		//计算当前循环回文串长度
 		var tmpMaxLen = pointerR - pointerL - 1
-		if tmpMaxLen > maxLen{
-			res = s[pointerL + 1:pointerR]
+		
+		//比较当前回文串长度和历史值，较长的为最终结果
+		if tmpMaxLen > maxLen {
+			res = s[pointerL+1 : pointerR]
 			maxLen = tmpMaxLen
 		}
 
