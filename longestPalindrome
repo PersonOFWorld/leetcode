@@ -28,7 +28,3 @@ func longestPalindrome(s string) string {
 	return res
 }
 
-作者：JasperLIN
-链接：https://leetcode-cn.com/problems/longest-palindromic-substring/solution/gojian-ji-jie-fa-yong-shi-ji-bai-100yong-hu-by-jas/
-来源：力扣（LeetCode）
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
