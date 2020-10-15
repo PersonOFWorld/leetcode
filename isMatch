@@ -47,47 +47,75 @@ p = "mis*is*p*."
 链接：https://leetcode-cn.com/problems/regular-expression-matching
 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 
+package main
+
 import (
-        "fmt"
-        "strings"
+	"fmt"
+	"strings"
 )
 
 func main() {
-        fmt.Printf("result:%v\n", isMatch("aa", "a"))
+	fmt.Printf("result:%v\n", isMatch("mississippi", "mis*is*p*."))
 }
 
 func isMatch(s string, p string) bool {
-        //字符规律p长度不够，且没有通用字符不可能匹配
-        if len(p) < len(s) && !strings.Contains(p, "*") && !strings.Contains(p, ".") {
-                return false
-        }
+	//字符规律p长度不够，且没有通用字符不可能匹配
+	if len(p) < len(s) && !strings.Contains(p, "*") && !strings.Contains(p, ".") {
+		return false
+	}
 
-        if s == "" {
-                return true
-        }
+	if s == "" {
+		return true
+	}
 
-        if p == "" {
-                return false
-        }
+	if p == "" {
+		return false
+	}
 
-        repeatIndex := 0
-        curIsDot := false
-        curIsCommon := false
-        for i := 0; i < len(s); i++ {
-                pIndex := i
-                pChar := string(p[pIndex])
-                sChar := string(s[i])
+	if p == ".*" {
+		return true
+	}
 
-                if pChar == "." {
-                        curIsDot = true
-                }
+	pIndex := 0
+	isStart := false
+	for i := 0; i < len(s); i++ {
+		pChar := string(p[pIndex])
+		sChar := string(s[i])
+		fmt.Printf("i:%d||pChar:%v\n", i, pChar)
+		fmt.Printf("pIndex:%d||sChar:%v\n", pIndex, sChar)
 
-                if pChar == "*" {
-                        curIsCommon = true
-                }
+		if pChar == sChar {
+			pIndex++
+			isStart = true
+			continue
+		}
 
-                if pChar != sChar && 
-        }
+		if pChar == "." {
+			pIndex++
+			isStart = true
+			continue
+		}
 
-        return true
+		if i > 0 && string(s[i]) == string(s[i-1]) && pChar == "*" {
+			fmt.Println("common char")
+			isStart = true
+			continue
+		} else {
+			if isStart {
+				pIndex++
+				if string(p[pIndex]) == sChar || string(p[pIndex]) == "." {
+					continue
+				} else {
+					return false
+				}
+			} else {
+				fmt.Println("here")
+				pIndex++
+				i--
+				continue
+			}
+		}
+	}
+
+	return true
 }
